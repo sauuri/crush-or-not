@@ -51,6 +51,7 @@
     /* 컨페티 */
     .confetti-piece {
       position: fixed;
+      top: -12px;
       width: 8px; height: 8px;
       border-radius: 2px;
       pointer-events: none;
@@ -58,8 +59,8 @@
       animation: confettiFall var(--cd, 1.5s) ease-in var(--cdelay, 0s) forwards;
     }
     @keyframes confettiFall {
-      0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+      0%   { transform: translateY(0) rotate(0deg);   opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
     }
 
     .container { position: relative; z-index: 1; width: 100%; max-width: 460px; padding: 20px 16px 40px; }
@@ -74,12 +75,10 @@
     .intro-ring {
       position: absolute; inset: -14px;
       border-radius: 50%;
-      border: 2px solid transparent;
-      background: linear-gradient(135deg, #f43f5e44, #be185d22) border-box;
-      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: destination-out;
-      mask-composite: exclude;
+      border: 2px solid rgba(244,63,94,0.35);
+      background: transparent;
       animation: ringPulse 2s ease-in-out infinite;
+      pointer-events: none;
     }
     @keyframes ringPulse {
       0%, 100% { transform: scale(1);    opacity: 0.5; }
@@ -255,9 +254,12 @@
     .score-label { font-size: 11px; font-weight: 800; color: #c06880; letter-spacing: 1.5px; text-transform: uppercase; }
     .score-pct { font-size: 28px; font-weight: 900; color: var(--title-color, #f43f5e); }
 
-    .hearts-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+    .hearts-row {
+      display: grid; grid-template-columns: repeat(10, 1fr);
+      gap: 4px; margin-bottom: 10px;
+    }
     .heart-dot {
-      width: 28px; height: 28px; font-size: 18px;
+      width: 100%; aspect-ratio: 1; font-size: 16px;
       display: flex; align-items: center; justify-content: center;
       border-radius: 50%;
       transition: all 0.3s;
@@ -355,7 +357,7 @@
       <p class="intro-desc">
         마음속에 떠오르는 그 사람이 있어?<br>
         <strong>행동 패턴 10가지</strong>로 솔직하게 진단해줄게.<br>
-        거짓말하면 결과도 거짓말해.
+        솔직하게 답해야 정확해.
       </p>
       <div class="intro-tags">
         <span class="intro-tag">💭 10문제</span>
