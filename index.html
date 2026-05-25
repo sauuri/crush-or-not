@@ -12,19 +12,23 @@
   <title>나 짝사랑 중인가? 💘</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
       min-height: 100vh;
-      background: #0f080f;
+      background: #0a0510;
       font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
       color: #fde8f0;
       overflow-x: hidden;
       display: flex; align-items: center; justify-content: center;
     }
+
     body::before {
       content: '';
       position: fixed; inset: 0;
-      background: radial-gradient(ellipse at 70% 20%, #f43f5e18 0%, transparent 60%),
-                  radial-gradient(ellipse at 20% 80%, #be185d18 0%, transparent 60%);
+      background:
+        radial-gradient(ellipse at 70% 15%, #f43f5e22 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 85%, #be185d18 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 50%, #7c0d3020 0%, transparent 70%);
       pointer-events: none; z-index: 0;
     }
 
@@ -38,149 +42,299 @@
       opacity: 0;
     }
     @keyframes floatUp {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.4; }
-      90% { opacity: 0.2; }
-      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+      0%   { transform: translateY(100vh) rotate(0deg);   opacity: 0; }
+      10%  { opacity: 0.35; }
+      90%  { opacity: 0.15; }
+      100% { transform: translateY(-120px) rotate(360deg); opacity: 0; }
     }
 
-    .container { position: relative; z-index: 1; width: 100%; max-width: 480px; padding: 20px; }
+    /* 컨페티 */
+    .confetti-piece {
+      position: fixed;
+      width: 8px; height: 8px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 999;
+      animation: confettiFall var(--cd, 1.5s) ease-in var(--cdelay, 0s) forwards;
+    }
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
 
-    /* INTRO */
-    .intro { text-align: center; padding: 40px 20px; }
-    .intro .icon { font-size: 80px; display: block; margin-bottom: 20px; animation: heartbeat 1.2s ease-in-out infinite; }
+    .container { position: relative; z-index: 1; width: 100%; max-width: 460px; padding: 20px 16px 40px; }
+
+    /* ── INTRO ── */
+    .intro { text-align: center; padding: 48px 16px; }
+
+    .intro-icon-wrap {
+      position: relative; display: inline-block; margin-bottom: 28px;
+    }
+    .intro-icon { font-size: 90px; display: block; animation: heartbeat 1.4s ease-in-out infinite; }
+    .intro-ring {
+      position: absolute; inset: -14px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      background: linear-gradient(135deg, #f43f5e44, #be185d22) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      animation: ringPulse 2s ease-in-out infinite;
+    }
+    @keyframes ringPulse {
+      0%, 100% { transform: scale(1);    opacity: 0.5; }
+      50%       { transform: scale(1.12); opacity: 1;   }
+    }
     @keyframes heartbeat {
       0%, 100% { transform: scale(1); }
-      14% { transform: scale(1.15); }
-      28% { transform: scale(1); }
-      42% { transform: scale(1.1); }
-      70% { transform: scale(1); }
+      15%       { transform: scale(1.18); }
+      30%       { transform: scale(1); }
+      45%       { transform: scale(1.12); }
+      60%       { transform: scale(1); }
     }
+
     .intro h1 {
-      font-size: 28px; font-weight: 800; margin-bottom: 8px;
-      background: linear-gradient(135deg, #fb7185, #f43f5e);
+      font-size: 30px; font-weight: 900; margin-bottom: 10px; line-height: 1.2;
+      background: linear-gradient(135deg, #fb7185 20%, #f43f5e 60%, #e11d48);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-    .intro p { font-size: 15px; color: #9f6070; line-height: 1.8; margin-bottom: 32px; }
-    .intro p strong { color: #fb7185; }
+    .intro-desc {
+      font-size: 15px; color: #9f6878; line-height: 1.9; margin-bottom: 36px;
+    }
+    .intro-desc strong { color: #fb7185; }
 
-    /* CARD */
+    .intro-tags {
+      display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 32px;
+    }
+    .intro-tag {
+      background: rgba(244,63,94,0.1); border: 1px solid rgba(244,63,94,0.25);
+      color: #fb7185; font-size: 12px; font-weight: 700;
+      padding: 5px 14px; border-radius: 20px;
+    }
+
+    .start-btn {
+      background: linear-gradient(135deg, #be185d, #f43f5e, #fb7185);
+      color: white; border: none;
+      padding: 16px 52px; border-radius: 50px;
+      font-size: 17px; font-weight: 800; cursor: pointer;
+      transition: all 0.3s; font-family: inherit;
+      box-shadow: 0 6px 28px rgba(244,63,94,0.45);
+      letter-spacing: 0.5px;
+    }
+    .start-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(244,63,94,0.6); }
+    .start-btn:active { transform: translateY(0); }
+
+    /* ── PROGRESS ── */
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .progress-label { font-size: 12px; color: #c06880; font-weight: 700; letter-spacing: 0.5px; }
+    .progress-count { font-size: 13px; color: #f43f5e; font-weight: 800; }
+    .progress-bar {
+      width: 100%; height: 7px;
+      background: rgba(244,63,94,0.12); border-radius: 4px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #be185d, #f43f5e, #fb7185);
+      border-radius: 4px; transition: width 0.45s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 0 8px rgba(244,63,94,0.5);
+    }
+
+    /* ── QUESTION CARD ── */
     .card {
-      background: #1a0d14;
-      border: 1px solid #3a1828;
-      border-radius: 24px;
-      padding: 32px 26px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 40px #f43f5e11;
+      background: linear-gradient(145deg, #1c0d18, #150a14);
+      border: 1px solid rgba(244,63,94,0.2);
+      border-radius: 26px;
+      padding: 30px 24px;
+      box-shadow: 0 8px 40px rgba(244,63,94,0.08), inset 0 1px 0 rgba(255,255,255,0.04);
     }
 
-    /* PROGRESS */
-    .progress-wrap { margin-bottom: 22px; }
-    .progress-info { display: flex; justify-content: space-between; margin-bottom: 8px; }
-    .progress-label { font-size: 12px; color: #7a3a4a; font-weight: 700; }
-    .progress-count { font-size: 12px; color: #7a3a4a; }
-    .progress-bar { width: 100%; height: 4px; background: #2a1020; border-radius: 2px; overflow: hidden; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, #f43f5e, #fb7185); border-radius: 2px; transition: width 0.4s ease; }
-
-    /* QUESTION */
-    .question-card { animation: slideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .question-card { animation: slideIn 0.38s cubic-bezier(0.34,1.56,0.64,1); }
     @keyframes slideIn {
-      from { opacity: 0; transform: translateX(30px) scale(0.97); }
-      to { opacity: 1; transform: translateX(0) scale(1); }
+      from { opacity: 0; transform: translateX(28px) scale(0.97); }
+      to   { opacity: 1; transform: translateX(0) scale(1); }
     }
-    .q-emoji { font-size: 38px; display: block; margin-bottom: 14px; }
-    .q-num { font-size: 11px; font-weight: 700; color: #f43f5e88; letter-spacing: 1px; margin-bottom: 8px; }
-    .q-text { font-size: 20px; font-weight: 700; line-height: 1.5; margin-bottom: 24px; color: #fde8f0; }
+
+    .q-emoji { font-size: 42px; display: block; margin-bottom: 16px; }
+    .q-num {
+      display: inline-block; font-size: 11px; font-weight: 800;
+      color: #f43f5e; letter-spacing: 1.5px; text-transform: uppercase;
+      background: rgba(244,63,94,0.1); border: 1px solid rgba(244,63,94,0.2);
+      padding: 3px 10px; border-radius: 20px; margin-bottom: 12px;
+    }
+    .q-text { font-size: 19px; font-weight: 700; line-height: 1.55; margin-bottom: 24px; color: #fde8f0; }
 
     .options { display: flex; flex-direction: column; gap: 10px; }
     .option-btn {
-      background: #120810;
-      border: 1.5px solid #3a1828;
-      border-radius: 14px;
-      padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1.5px solid rgba(244,63,94,0.15);
+      border-radius: 16px; padding: 14px 16px;
       text-align: left; cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.22s;
       display: flex; align-items: center; gap: 12px;
       font-size: 15px; color: #c080a0; font-family: inherit;
+      position: relative; overflow: hidden;
     }
-    .option-btn:hover { background: #1e0d18; border-color: #f43f5e; color: #fde8f0; transform: translateX(4px); }
-    .option-btn.selected { background: linear-gradient(135deg, #3a0d20, #2a0d1a); border-color: #f43f5e; color: white; }
+    .option-btn::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(244,63,94,0.08), transparent);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .option-btn:hover { border-color: rgba(244,63,94,0.5); color: #fde8f0; transform: translateX(5px); }
+    .option-btn:hover::before { opacity: 1; }
+    .option-btn.selected {
+      background: linear-gradient(135deg, rgba(190,24,93,0.25), rgba(244,63,94,0.15));
+      border-color: #f43f5e; color: white;
+      box-shadow: 0 4px 20px rgba(244,63,94,0.25);
+    }
     .option-icon { font-size: 22px; flex-shrink: 0; }
 
-    /* RESULT */
-    .result-card { text-align: center; }
-    .result-emoji { font-size: 80px; display: block; margin-bottom: 16px; animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both; }
-    @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+    /* ── RESULT ── */
+    .result-outer {
+      animation: resultReveal 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes resultReveal {
+      from { opacity: 0; transform: scale(0.9) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .result-card {
+      background: linear-gradient(145deg, #1c0d18, #150a14);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 16px 60px rgba(244,63,94,0.18), 0 4px 16px rgba(0,0,0,0.4);
+    }
+
+    /* 결과 상단 - 스크린샷용 */
+    .result-hero {
+      padding: 36px 28px 28px;
+      text-align: center;
+      position: relative;
+    }
+    .result-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--hero-bg, radial-gradient(ellipse at 50% 0%, rgba(244,63,94,0.2) 0%, transparent 70%));
+    }
+    .result-emoji {
+      font-size: 80px; display: block; margin-bottom: 16px;
+      position: relative; z-index: 1;
+      animation: popIn 0.55s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
+    }
+    @keyframes popIn {
+      from { transform: scale(0) rotate(-15deg); }
+      to   { transform: scale(1) rotate(0deg); }
+    }
+
     .result-badge {
-      display: inline-block; padding: 6px 20px; border-radius: 50px;
-      font-size: 12px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 14px;
+      display: inline-block; padding: 6px 18px; border-radius: 50px;
+      font-size: 12px; font-weight: 800; letter-spacing: 1px;
+      margin-bottom: 14px; position: relative; z-index: 1;
+      background: var(--badge-bg); color: var(--badge-color);
+      border: 1px solid var(--badge-border);
     }
-    .result-title { font-size: 24px; font-weight: 800; line-height: 1.4; margin-bottom: 10px; }
-    .result-sub { font-size: 14px; color: #9f6070; line-height: 1.8; margin-bottom: 20px; }
+    .result-title {
+      font-size: 24px; font-weight: 900; line-height: 1.35;
+      margin-bottom: 8px; position: relative; z-index: 1;
+      color: var(--title-color);
+    }
+    .result-sub {
+      font-size: 14px; color: #9f7888; line-height: 1.85;
+      position: relative; z-index: 1;
+    }
 
-    .score-bar-wrap { margin-bottom: 24px; }
-    .score-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: #7a3a4a; margin-bottom: 8px; }
-    .score-bar { width: 100%; height: 8px; background: #2a1020; border-radius: 4px; overflow: hidden; }
+    /* 점수 시각화 */
+    .score-section {
+      padding: 22px 28px;
+      border-top: 1px solid rgba(244,63,94,0.1);
+      border-bottom: 1px solid rgba(244,63,94,0.1);
+    }
+    .score-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+    }
+    .score-label { font-size: 11px; font-weight: 800; color: #c06880; letter-spacing: 1.5px; text-transform: uppercase; }
+    .score-pct { font-size: 28px; font-weight: 900; color: var(--title-color, #f43f5e); }
+
+    .hearts-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+    .heart-dot {
+      width: 28px; height: 28px; font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+    .heart-dot.filled { animation: heartPop 0.3s cubic-bezier(0.34,1.56,0.64,1) var(--hd, 0s) both; }
+    @keyframes heartPop {
+      from { transform: scale(0); }
+      to   { transform: scale(1); }
+    }
+
+    .score-bar-track {
+      width: 100%; height: 10px;
+      background: rgba(244,63,94,0.1); border-radius: 5px; overflow: hidden;
+    }
     .score-bar-fill {
-      height: 100%; border-radius: 4px;
+      height: 100%; border-radius: 5px;
       background: linear-gradient(90deg, #be185d, #f43f5e, #fb7185);
-      transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0 10px rgba(244,63,94,0.5);
+      transition: width 1.2s cubic-bezier(0.34,1.56,0.64,1);
     }
 
-    .advice {
-      background: #120810; border: 1px solid #3a1828;
-      border-radius: 16px; padding: 18px; margin-bottom: 24px; text-align: left;
+    /* 조언 */
+    .advice-section { padding: 22px 28px; }
+    .advice-box {
+      background: rgba(244,63,94,0.06);
+      border: 1px solid rgba(244,63,94,0.15);
+      border-radius: 18px; padding: 18px 20px; margin-bottom: 20px;
     }
-    .advice-title { font-size: 11px; color: #f43f5e88; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 8px; }
-    .advice-text { font-size: 14px; color: #c080a0; line-height: 1.8; }
+    .advice-tag {
+      font-size: 10px; font-weight: 800; color: #f43f5e;
+      letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .advice-text { font-size: 14px; color: #c090a8; line-height: 1.85; }
 
+    /* 광고 */
+    .ad-wrap { text-align: center; margin-bottom: 20px; }
+
+    /* 버튼 */
     .action-btns { display: flex; flex-direction: column; gap: 10px; }
     .primary-btn {
       background: linear-gradient(135deg, #be185d, #f43f5e);
       color: white; border: none;
-      padding: 14px; border-radius: 14px;
-      font-size: 16px; font-weight: 700; cursor: pointer;
-      transition: all 0.2s; font-family: inherit;
+      padding: 15px; border-radius: 16px;
+      font-size: 16px; font-weight: 800; cursor: pointer;
+      transition: all 0.22s; font-family: inherit;
+      box-shadow: 0 6px 24px rgba(244,63,94,0.35);
+      letter-spacing: 0.3px;
     }
-    .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px #f43f5e44; }
+    .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(244,63,94,0.5); }
     .secondary-btn {
-      background: #120810; color: #c080a0;
-      border: 1.5px solid #3a1828;
-      padding: 14px; border-radius: 14px;
-      font-size: 15px; font-weight: 600; cursor: pointer;
-      transition: all 0.2s; font-family: inherit;
+      background: rgba(244,63,94,0.08); color: #fb7185;
+      border: 1.5px solid rgba(244,63,94,0.25);
+      padding: 15px; border-radius: 16px;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: all 0.22s; font-family: inherit;
     }
-    .secondary-btn:hover { border-color: #f43f5e44; color: #fde8f0; }
+    .secondary-btn:hover { background: rgba(244,63,94,0.14); border-color: rgba(244,63,94,0.45); }
 
-    .start-btn {
-      background: linear-gradient(135deg, #be185d, #f43f5e);
-      color: white; border: none;
-      padding: 16px 48px; border-radius: 50px;
-      font-size: 18px; font-weight: 700; cursor: pointer;
-      transition: all 0.3s; font-family: inherit;
-      box-shadow: 0 6px 24px #f43f5e33;
-    }
-    .start-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 32px #f43f5e55; }
-
+    /* Toast */
     .toast {
-      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px);
-      background: #1a0d14; border: 1px solid #f43f5e44; color: #fb7185;
-      padding: 12px 24px; border-radius: 50px; font-size: 14px; font-weight: 600;
-      z-index: 999; transition: transform 0.3s; pointer-events: none;
+      position: fixed; bottom: 32px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1c0d18; border: 1px solid rgba(244,63,94,0.4);
+      color: #fb7185; padding: 12px 26px;
+      border-radius: 50px; font-size: 14px; font-weight: 700;
+      z-index: 999; transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none; white-space: nowrap;
+      box-shadow: 0 8px 32px rgba(244,63,94,0.2);
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* 결과 등급 색상 */
-    .g0 .result-badge { background: #1a0d14; color: #9f6070; border: 1px solid #3a1828; }
-    .g0 .result-title { color: #c080a0; }
-    .g1 .result-badge { background: #2a1020; color: #fb7185; }
-    .g1 .result-title { color: #fb7185; }
-    .g2 .result-badge { background: #3a0d20; color: #f43f5e; }
-    .g2 .result-title { color: #f43f5e; }
-    .g3 .result-badge { background: #4a0d28; color: #e11d48; }
-    .g3 .result-title { color: #e11d48; }
-    .g4 .result-badge { background: #5a0d30; color: #ff3a6e; }
-    .g4 .result-title { color: #ff3a6e; }
+    /* 등급별 색상 */
+    .g0 { --title-color:#c080a0; --badge-bg:rgba(200,100,140,0.12); --badge-color:#c080a0; --badge-border:rgba(200,100,140,0.25); --hero-bg:radial-gradient(ellipse at 50% 0%,rgba(200,100,140,0.15) 0%,transparent 70%); }
+    .g1 { --title-color:#fb7185; --badge-bg:rgba(251,113,133,0.12); --badge-color:#fb7185; --badge-border:rgba(251,113,133,0.3);  --hero-bg:radial-gradient(ellipse at 50% 0%,rgba(251,113,133,0.18) 0%,transparent 70%); }
+    .g2 { --title-color:#f43f5e; --badge-bg:rgba(244,63,94,0.15);  --badge-color:#f43f5e; --badge-border:rgba(244,63,94,0.35);   --hero-bg:radial-gradient(ellipse at 50% 0%,rgba(244,63,94,0.22) 0%,transparent 70%); }
+    .g3 { --title-color:#e11d48; --badge-bg:rgba(225,29,72,0.18);  --badge-color:#f43f5e; --badge-border:rgba(225,29,72,0.4);    --hero-bg:radial-gradient(ellipse at 50% 0%,rgba(225,29,72,0.28) 0%,transparent 70%); }
+    .g4 { --title-color:#ff2d5a; --badge-bg:rgba(255,45,90,0.2);   --badge-color:#ff6b8a; --badge-border:rgba(255,45,90,0.5);    --hero-bg:radial-gradient(ellipse at 50% 0%,rgba(255,45,90,0.32) 0%,transparent 70%); }
   </style>
   <script type="text/javascript" src="//t1.kakaocdn.net/kas/static/ba.min.js" async></script>
 </head>
@@ -189,40 +343,57 @@
 <div class="hearts" id="hearts"></div>
 
 <div class="container">
+
+  <!-- INTRO -->
   <div id="screen-intro">
     <div class="intro">
-      <span class="icon">💘</span>
+      <div class="intro-icon-wrap">
+        <span class="intro-icon">💘</span>
+        <div class="intro-ring"></div>
+      </div>
       <h1>나 짝사랑 중인가?</h1>
-      <p>마음속에 떠오르는 그 사람이 있어?<br><strong>행동 패턴 10가지</strong>로<br>짝사랑 여부를 진단해줄게.<br><br>솔직하게 답해야 정확해.</p>
-      <button class="start-btn" onclick="startQuiz()">진단 시작 →</button>
+      <p class="intro-desc">
+        마음속에 떠오르는 그 사람이 있어?<br>
+        <strong>행동 패턴 10가지</strong>로 솔직하게 진단해줄게.<br>
+        거짓말하면 결과도 거짓말해.
+      </p>
+      <div class="intro-tags">
+        <span class="intro-tag">💭 10문제</span>
+        <span class="intro-tag">⏱ 1분</span>
+        <span class="intro-tag">💯 익명</span>
+      </div>
+      <button class="start-btn" onclick="startQuiz()">진단 시작하기 →</button>
     </div>
   </div>
 
+  <!-- QUIZ -->
   <div id="screen-quiz" style="display:none">
     <div class="progress-wrap">
       <div class="progress-info">
         <span class="progress-label">💘 짝사랑 진단 중</span>
         <span class="progress-count" id="prog-count">1 / 10</span>
       </div>
-      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+      </div>
     </div>
     <div class="card">
       <div class="question-card" id="qcard"></div>
     </div>
   </div>
 
-  <div id="screen-result" style="display:none">
-    <div class="card" id="result-card"></div>
-  </div>
+  <!-- RESULT -->
+  <div id="screen-result" style="display:none"></div>
+
 </div>
 
-<div class="toast" id="toast">링크 복사됐어! 💘</div>
+<div class="toast" id="toast">🔗 링크 복사됐어!</div>
 
 <script>
   // 하트 파티클
   const heartsEl = document.getElementById('hearts');
   const emojis = ['💘','💝','💖','💗','🩷','❤️','💕'];
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 18; i++) {
     const h = document.createElement('div');
     h.className = 'heart';
     h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
@@ -230,85 +401,105 @@
     heartsEl.appendChild(h);
   }
 
+  // 컨페티
+  function launchConfetti() {
+    const colors = ['#f43f5e','#fb7185','#fda4af','#be185d','#ff6b8a','#ffc0cb'];
+    for (let i = 0; i < 60; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `
+        left:${Math.random()*100}%;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        --cd:${(Math.random()*1.5+1).toFixed(2)}s;
+        --cdelay:${(Math.random()*0.8).toFixed(2)}s;
+        width:${Math.random()*8+4}px;
+        height:${Math.random()*8+4}px;
+        border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3000);
+    }
+  }
+
   const questions = [
-    { emoji: '📱', text: '그 사람 SNS를 하루에 몇 번이나 확인해?',
-      options: [
-        { icon: '🙂', text: '딱히 안 봐', score: 0 },
-        { icon: '👀', text: '가끔 봐', score: 1 },
-        { icon: '🔍', text: '매일 꼬박꼬박 체크해', score: 2 },
-      ]},
-    { emoji: '💓', text: '그 사람이랑 같은 공간에 있으면 어때?',
-      options: [
-        { icon: '😊', text: '그냥 편하게 있어', score: 0 },
-        { icon: '🫣', text: '살짝 의식돼', score: 1 },
-        { icon: '🫀', text: '심장이 쫄깃해져', score: 2 },
-      ]},
-    { emoji: '📩', text: '그 사람한테 연락이 오면?',
-      options: [
-        { icon: '📬', text: '평범하게 확인해', score: 0 },
-        { icon: '🙂‍↕️', text: '좀 설레', score: 1 },
-        { icon: '🏃', text: '무슨 내용인지 바로 확인해', score: 2 },
-      ]},
-    { emoji: '🗣️', text: '대화할 때 그 사람 얘기가 자주 나와?',
-      options: [
-        { icon: '🤔', text: '딱히 없어', score: 0 },
-        { icon: '😅', text: '가끔 나와', score: 1 },
-        { icon: '🫢', text: '자꾸 나와서 나도 이상하다고 생각함', score: 2 },
-      ]},
-    { emoji: '👀', text: '그 사람이 다른 사람이랑 친하게 지내면?',
-      options: [
-        { icon: '😎', text: '별 신경 안 써', score: 0 },
-        { icon: '🙁', text: '살짝 눈에 밟혀', score: 1 },
-        { icon: '😤', text: '왠지 기분이 별로야', score: 2 },
-      ]},
-    { emoji: '💭', text: '그 사람 생각이 언제 나?',
-      options: [
-        { icon: '🔗', text: '연관된 것 볼 때만', score: 0 },
-        { icon: '🌙', text: '하루에 한두 번', score: 1 },
-        { icon: '🌀', text: '수시로 생각나', score: 2 },
-      ]},
-    { emoji: '✨', text: '그 사람한테 잘 보이려고 신경 쓴 적 있어?',
-      options: [
-        { icon: '🙅', text: '없어', score: 0 },
-        { icon: '😬', text: '한두 번 있어', score: 1 },
-        { icon: '🪞', text: '자주 신경 써', score: 2 },
-      ]},
-    { emoji: '🔄', text: '그 사람이랑 있었던 일을 나중에 다시 떠올려?',
-      options: [
-        { icon: '😶', text: '딱히 없어', score: 0 },
-        { icon: '😌', text: '가끔 떠오르기도 해', score: 1 },
-        { icon: '🎬', text: '자꾸 그 장면이 떠올라', score: 2 },
-      ]},
-    { emoji: '💔', text: '그 사람이 연애한다는 소식 들으면?',
-      options: [
-        { icon: '🤷', text: '그냥 그렇구나 싶어', score: 0 },
-        { icon: '😶‍🌫️', text: '살짝 신경 쓰일 것 같아', score: 1 },
-        { icon: '😶', text: '기분이 확 안 좋을 것 같아', score: 2 },
-      ]},
-    { emoji: '🍽️', text: '그 사람이랑 단둘이 뭔가 할 기회 생기면?',
-      options: [
-        { icon: '😐', text: '그냥 가거나 말거나', score: 0 },
-        { icon: '🙂', text: '좀 기대돼', score: 1 },
-        { icon: '🦋', text: '배에서 나비가 팔랑거려', score: 2 },
-      ]},
+    { emoji:'📱', text:'그 사람 SNS를 하루에 몇 번이나 확인해?', options:[
+      { icon:'🙂', text:'딱히 안 봐', score:0 },
+      { icon:'👀', text:'가끔 봐', score:1 },
+      { icon:'🔍', text:'매일 꼬박꼬박 체크해', score:2 },
+    ]},
+    { emoji:'💓', text:'그 사람이랑 같은 공간에 있으면 어때?', options:[
+      { icon:'😊', text:'그냥 편하게 있어', score:0 },
+      { icon:'🫣', text:'살짝 의식돼', score:1 },
+      { icon:'🫀', text:'심장이 쫄깃해져', score:2 },
+    ]},
+    { emoji:'📩', text:'그 사람한테 연락이 오면?', options:[
+      { icon:'📬', text:'평범하게 확인해', score:0 },
+      { icon:'🙂‍↕️', text:'좀 설레', score:1 },
+      { icon:'🏃', text:'무슨 내용인지 바로 확인해', score:2 },
+    ]},
+    { emoji:'🗣️', text:'대화할 때 그 사람 얘기가 자주 나와?', options:[
+      { icon:'🤔', text:'딱히 없어', score:0 },
+      { icon:'😅', text:'가끔 나와', score:1 },
+      { icon:'🫢', text:'자꾸 나와서 나도 이상하다고 생각함', score:2 },
+    ]},
+    { emoji:'👀', text:'그 사람이 다른 사람이랑 친하게 지내면?', options:[
+      { icon:'😎', text:'별 신경 안 써', score:0 },
+      { icon:'🙁', text:'살짝 눈에 밟혀', score:1 },
+      { icon:'😤', text:'왠지 기분이 별로야', score:2 },
+    ]},
+    { emoji:'💭', text:'그 사람 생각이 언제 나?', options:[
+      { icon:'🔗', text:'연관된 것 볼 때만', score:0 },
+      { icon:'🌙', text:'하루에 한두 번', score:1 },
+      { icon:'🌀', text:'수시로 생각나', score:2 },
+    ]},
+    { emoji:'✨', text:'그 사람한테 잘 보이려고 신경 쓴 적 있어?', options:[
+      { icon:'🙅', text:'없어', score:0 },
+      { icon:'😬', text:'한두 번 있어', score:1 },
+      { icon:'🪞', text:'자주 신경 써', score:2 },
+    ]},
+    { emoji:'🔄', text:'그 사람이랑 있었던 일을 나중에 다시 떠올려?', options:[
+      { icon:'😶', text:'딱히 없어', score:0 },
+      { icon:'😌', text:'가끔 떠오르기도 해', score:1 },
+      { icon:'🎬', text:'자꾸 그 장면이 떠올라', score:2 },
+    ]},
+    { emoji:'💔', text:'그 사람이 연애한다는 소식 들으면?', options:[
+      { icon:'🤷', text:'그냥 그렇구나 싶어', score:0 },
+      { icon:'😶‍🌫️', text:'살짝 신경 쓰일 것 같아', score:1 },
+      { icon:'😶', text:'기분이 확 안 좋을 것 같아', score:2 },
+    ]},
+    { emoji:'🍽️', text:'그 사람이랑 단둘이 뭔가 할 기회 생기면?', options:[
+      { icon:'😐', text:'그냥 가거나 말거나', score:0 },
+      { icon:'🙂', text:'좀 기대돼', score:1 },
+      { icon:'🦋', text:'괜히 심장이 두근거릴 것 같아', score:2 },
+    ]},
   ];
 
   const grades = [
-    { g: 'g0', emoji: '😌', badge: '그냥 호감이야', title: '짝사랑까진 아닌 것 같아',
-      sub: '관심은 있는데 마음이 크게 흔들리진 않는 상태야.\n그냥 좋은 사람 정도?',
-      advice: '아직은 짝사랑이라기보단 호감 단계야. 더 알아가다 보면 감정이 커질 수도 있어.' },
-    { g: 'g1', emoji: '🌸', badge: '관심 있는 거 맞아', title: '짝사랑 초기 증상이야',
-      sub: '아직 확신은 없지만 그 사람이 점점\n마음에 걸리기 시작했어.',
-      advice: '지금 이 감정 꽤 달콤하지 않아? 조금만 더 알아가봐, 감정이 더 명확해질 거야.' },
-    { g: 'g2', emoji: '💕', badge: '짝사랑 맞아', title: '인정해, 이거 짝사랑이야',
-      sub: '행동이 이미 다 말해주고 있어.\n그 사람 생각이 자꾸 나잖아.',
-      advice: '본인도 어느 정도 알고 있었던 거 아니야? 용기 내볼 의향은 없어?' },
-    { g: 'g3', emoji: '💘', badge: '완전 빠졌어', title: '심각한 짝사랑 상태야',
-      sub: '이 정도면 일상생활에 영향 줄 수도 있어.\n머릿속에 그 사람이 꽤 많이 차지하고 있는 것 같아.',
-      advice: '이미 많이 빠졌는데 계속 혼자 담아두기엔 힘들지 않아? 한번 용기 내봐.' },
-    { g: 'g4', emoji: '🔥', badge: '이미 사랑인 것 같은데?', title: '짝사랑 수준을 넘은 것 같아',
-      sub: '이건 이미 사랑에 가까운 감정이야.\n진지하게 고백 고려해봐야 할 것 같은데.',
-      advice: '솔직히 지금 이 감정 오래 못 숨겨. 고백하면 어떻게 될지 모르지만, 안 하면 100% 후회야.' },
+    { g:'g0', emoji:'😌', badge:'그냥 호감이야',
+      title:'짝사랑까진 아닌 것 같아',
+      sub:'관심은 있는데 마음이 크게 흔들리지 않는 상태야.\n그냥 좋은 사람 정도?',
+      advice:'아직은 짝사랑이라기보단 호감 단계야. 더 알아가다 보면 감정이 커질 수도 있어.',
+      hearts: 2 },
+    { g:'g1', emoji:'🌸', badge:'관심 있는 거 맞아',
+      title:'짝사랑 초기 증상이야',
+      sub:'아직 확신은 없지만 그 사람이 점점\n마음에 걸리기 시작했어.',
+      advice:'지금 이 감정 꽤 달콤하지 않아? 조금 더 알아가봐, 감정이 더 명확해질 거야.',
+      hearts: 4 },
+    { g:'g2', emoji:'💕', badge:'짝사랑 맞아',
+      title:'인정해, 이거 짝사랑이야',
+      sub:'행동이 이미 다 말해주고 있어.\n그 사람 생각이 자꾸 나잖아.',
+      advice:'본인도 어느 정도 알고 있었던 거 아니야? 용기 내볼 의향은 없어?',
+      hearts: 6 },
+    { g:'g3', emoji:'💘', badge:'완전 빠졌어',
+      title:'심각한 짝사랑 상태야',
+      sub:'이 정도면 일상생활에 영향 줄 수도 있어.\n머릿속에 그 사람이 꽤 많이 차지하고 있는 것 같아.',
+      advice:'이미 많이 빠졌는데 계속 혼자 담아두기엔 힘들지 않아? 한번 용기 내봐.',
+      hearts: 8 },
+    { g:'g4', emoji:'🔥', badge:'이미 사랑인 것 같은데?',
+      title:'짝사랑 수준을 넘은 것 같아',
+      sub:'이건 이미 사랑에 가까운 감정이야.\n진지하게 고백 고려해봐야 할 것 같은데.',
+      advice:'솔직히 지금 이 감정 오래 못 숨겨. 고백하면 어떻게 될지 모르지만, 안 하면 100% 후회야.',
+      hearts: 10 },
   ];
 
   let cur = 0, total = 0;
@@ -321,7 +512,8 @@
 
   function renderQ(idx) {
     const q = questions[idx];
-    document.getElementById('prog-fill').style.width = (idx / questions.length * 100) + '%';
+    const pct = (idx / questions.length * 100);
+    document.getElementById('prog-fill').style.width = pct + '%';
     document.getElementById('prog-count').textContent = `${idx+1} / ${questions.length}`;
     const card = document.getElementById('qcard');
     card.style.animation = 'none';
@@ -332,8 +524,8 @@
       <div class="q-num">질문 ${idx+1}</div>
       <div class="q-text">${q.text}</div>
       <div class="options">
-        ${q.options.map((o, i) => `
-          <button class="option-btn" onclick="pick(${i}, ${o.score})">
+        ${q.options.map((o,i) => `
+          <button class="option-btn" onclick="pick(${i},${o.score})">
             <span class="option-icon">${o.icon}</span>
             <span>${o.text}</span>
           </button>`).join('')}
@@ -353,46 +545,81 @@
 
   function showResult() {
     document.getElementById('screen-quiz').style.display = 'none';
-    document.getElementById('screen-result').style.display = 'block';
+    const el = document.getElementById('screen-result');
+    el.style.display = 'block';
 
-    let gi;
-    if (total <= 4) gi = 0;
-    else if (total <= 8) gi = 1;
-    else if (total <= 12) gi = 2;
-    else if (total <= 16) gi = 3;
-    else gi = 4;
-
+    let gi = total <= 4 ? 0 : total <= 8 ? 1 : total <= 12 ? 2 : total <= 16 ? 3 : 4;
     const g = grades[gi];
     const pct = Math.round((total / 20) * 100);
-    const card = document.getElementById('result-card');
-    card.className = 'card result-card ' + g.g;
-    card.innerHTML = `
-      <span class="result-emoji">${g.emoji}</span>
-      <div class="result-badge">${g.badge}</div>
-      <div class="result-title">${g.title}</div>
-      <div class="result-sub">${g.sub.replace('\n','<br>')}</div>
-      <div class="score-bar-wrap">
-        <div class="score-bar-label"><span>호감</span><span>짝사랑 ${pct}%</span><span>사랑</span></div>
-        <div class="score-bar"><div class="score-bar-fill" id="sbar" style="width:0%"></div></div>
-      </div>
-      <div class="advice">
-        <div class="advice-title">💌 한마디</div>
-        <div class="advice-text">${g.advice}</div>
-      </div>
-      <div style="text-align:center;margin:24px 0 8px">
-        <ins class="kakao_ad_area" style="display:none;"
-          data-ad-unit="DAN-PVu656ucRpjzw2zW"
-          data-ad-width="320"
-          data-ad-height="50"></ins>
-      </div>
-      <div class="action-btns">
-        <button class="primary-btn" onclick="retry()">🔄 다시 해보기</button>
-        <button class="secondary-btn" onclick="share()">🔗 결과 공유하기</button>
+
+    // 하트 채우기
+    const heartsHtml = Array.from({length:10}, (_,i) =>
+      `<div class="heart-dot ${i < g.hearts ? 'filled' : ''}" style="--hd:${i*0.06}s">
+        ${i < g.hearts ? '❤️' : '🩶'}
+      </div>`
+    ).join('');
+
+    el.innerHTML = `
+      <div class="result-outer ${g.g}">
+        <div class="result-card">
+
+          <div class="result-hero">
+            <span class="result-emoji">${g.emoji}</span>
+            <div class="result-badge">${g.badge}</div>
+            <div class="result-title">${g.title}</div>
+            <div class="result-sub">${g.sub.replace('\n','<br>')}</div>
+          </div>
+
+          <div class="score-section">
+            <div class="score-header">
+              <span class="score-label">💘 짝사랑 지수</span>
+              <span class="score-pct" id="score-num">0%</span>
+            </div>
+            <div class="hearts-row">${heartsHtml}</div>
+            <div class="score-bar-track">
+              <div class="score-bar-fill" id="sbar" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="advice-section">
+            <div class="advice-box">
+              <div class="advice-tag">💌 한마디</div>
+              <div class="advice-text">${g.advice}</div>
+            </div>
+
+            <div class="ad-wrap">
+              <ins class="kakao_ad_area" style="display:none;"
+                data-ad-unit="DAN-PVu656ucRpjzw2zW"
+                data-ad-width="320" data-ad-height="50"></ins>
+            </div>
+
+            <div class="action-btns">
+              <button class="primary-btn" onclick="retry()">🔄 다시 해보기</button>
+              <button class="secondary-btn" onclick="share()">🔗 결과 공유하기</button>
+            </div>
+          </div>
+
+        </div>
       </div>`;
+
     setTimeout(() => {
-      const bar = document.getElementById('sbar');
-      if (bar) bar.style.width = pct + '%';
-    }, 300);
+      document.getElementById('sbar').style.width = pct + '%';
+      animateCount('score-num', pct);
+    }, 350);
+
+    if (gi >= 2) launchConfetti();
+  }
+
+  function animateCount(id, target) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let n = 0;
+    const step = Math.ceil(target / 30);
+    const t = setInterval(() => {
+      n = Math.min(n + step, target);
+      el.textContent = n + '%';
+      if (n >= target) clearInterval(t);
+    }, 35);
   }
 
   function retry() {
