@@ -125,6 +125,15 @@
 
     /* ── PROGRESS ── */
     .progress-wrap { margin-bottom: 20px; }
+    .back-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: none; cursor: pointer;
+      color: #9f6878; font-size: 13px; font-weight: 700;
+      font-family: inherit; padding: 0; margin-bottom: 14px;
+      transition: color 0.2s;
+    }
+    .back-btn:hover { color: #fb7185; }
+    .back-btn:disabled { opacity: 0.25; cursor: default; }
     .progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .progress-label { font-size: 12px; color: #c06880; font-weight: 700; letter-spacing: 0.5px; }
     .progress-count { font-size: 13px; color: #f43f5e; font-weight: 800; }
@@ -370,6 +379,7 @@
 
   <!-- QUIZ -->
   <div id="screen-quiz" style="display:none">
+    <button class="back-btn" id="back-btn" onclick="goBack()">← 이전</button>
     <div class="progress-wrap">
       <div class="progress-info">
         <span class="progress-label">💘 짝사랑 진단 중</span>
@@ -432,7 +442,7 @@
     { emoji:'💓', text:'그 사람이랑 같은 공간에 있으면 어때?', options:[
       { icon:'😊', text:'그냥 편하게 있어', score:0 },
       { icon:'🫣', text:'살짝 의식돼', score:1 },
-      { icon:'🫀', text:'심장이 쫄깃해져', score:2 },
+      { icon:'🫀', text:'심장에서 지진나', score:2 },
     ]},
     { emoji:'📩', text:'그 사람한테 연락이 오면?', options:[
       { icon:'📬', text:'평범하게 확인해', score:0 },
@@ -504,9 +514,10 @@
       hearts: 10 },
   ];
 
-  let cur = 0, total = 0;
+  let cur = 0, answers = [];
 
   function startQuiz() {
+    cur = 0; answers = [];
     document.getElementById('screen-intro').style.display = 'none';
     document.getElementById('screen-quiz').style.display = 'block';
     renderQ(0);
@@ -517,6 +528,8 @@
     const pct = (idx / questions.length * 100);
     document.getElementById('prog-fill').style.width = pct + '%';
     document.getElementById('prog-count').textContent = `${idx+1} / ${questions.length}`;
+    const backBtn = document.getElementById('back-btn');
+    backBtn.disabled = idx === 0;
     const card = document.getElementById('qcard');
     card.style.animation = 'none';
     card.offsetHeight;
@@ -537,7 +550,7 @@
   function pick(idx, score) {
     document.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents = 'none');
     document.querySelectorAll('.option-btn')[idx].classList.add('selected');
-    total += score;
+    answers[cur] = score;
     setTimeout(() => {
       cur++;
       if (cur < questions.length) renderQ(cur);
@@ -545,11 +558,19 @@
     }, 380);
   }
 
+  function goBack() {
+    if (cur === 0) return;
+    answers.pop();
+    cur--;
+    renderQ(cur);
+  }
+
   function showResult() {
     document.getElementById('screen-quiz').style.display = 'none';
     const el = document.getElementById('screen-result');
     el.style.display = 'block';
 
+    const total = answers.reduce((a, b) => a + b, 0);
     let gi = total <= 4 ? 0 : total <= 8 ? 1 : total <= 12 ? 2 : total <= 16 ? 3 : 4;
     const g = grades[gi];
     const pct = Math.round((total / 20) * 100);
@@ -625,7 +646,7 @@
   }
 
   function retry() {
-    cur = 0; total = 0;
+    cur = 0; answers = [];
     document.getElementById('screen-result').style.display = 'none';
     document.getElementById('screen-intro').style.display = 'block';
   }
